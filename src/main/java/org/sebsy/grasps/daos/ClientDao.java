@@ -2,6 +2,7 @@ package org.sebsy.grasps.daos;
 
 import org.sebsy.grasps.beans.Client;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ public class ClientDao {
 
     public Client extraireClient(String id) {
 
-        Optional<Client> opt = List.of(clients).stream().filter(c -> c.getIdentifiantClient().equals(id)).findAny();
+        Optional<Client> opt = Arrays.asList(clients).stream().filter(c -> c.getIdentifiantClient().equals(id)).findAny();
         if (opt.isPresent()) {
             return opt.get();
         }

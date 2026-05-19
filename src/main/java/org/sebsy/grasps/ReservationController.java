@@ -44,13 +44,13 @@ public class ReservationController {
         String typeReservation = params.getTypeReservation();
         int nbPlaces = params.getNbPlaces();
 
-        if (identifiantClient == null || identifiantClient.isBlank()) {
+        if (identifiantClient == null || identifiantClient.trim().isEmpty()) {
             throw new IllegalArgumentException("Identifiant client requis");
         }
-        if (dateReservationStr == null || dateReservationStr.isBlank()) {
+        if (dateReservationStr == null || dateReservationStr.trim().isEmpty()) {
             throw new IllegalArgumentException("Date de réservation requise");
         }
-        if (typeReservation == null || typeReservation.isBlank()) {
+        if (typeReservation == null || typeReservation.trim().isEmpty()) {
             throw new IllegalArgumentException("Type de réservation requis");
         }
         if (nbPlaces <= 0) {

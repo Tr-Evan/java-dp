@@ -2,6 +2,7 @@ package org.sebsy.grasps.daos;
 
 import org.sebsy.grasps.beans.TypeReservation;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ public class TypeReservationDao {
 
     public TypeReservation extraireTypeReservation(String type) {
 
-        Optional<TypeReservation> opt = List.of(types).stream().filter(t -> t.getType().equals(type)).findAny();
+        Optional<TypeReservation> opt = Arrays.asList(types).stream().filter(t -> t.getType().equals(type)).findAny();
         if (opt.isPresent()) {
             return opt.get();
         }
