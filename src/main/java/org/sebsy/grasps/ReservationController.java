@@ -8,16 +8,17 @@ import org.sebsy.grasps.daos.TypeReservationDao;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 /**
  * Controlleur qui prend en charge la gestion des réservations client
  */
 public class ReservationController {
 
-    /**
-     * formatter
-     */
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final String DATE_PATTERN = "dd/MM/yyyy HH:mm:ss";
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     /**
      * DAO permettant d'accéder à la table des clients
@@ -36,40 +37,51 @@ public class ReservationController {
      * @return Reservation
      */
     public Reservation creerReservation(Params params) {
+        Objects.requireNonNull(params, "params must not be null");
 
-        // 1) Récupération des infos provenant de la classe appelante
         String identifiantClient = params.getIdentifiantClient();
         String dateReservationStr = params.getDateReservation();
         String typeReservation = params.getTypeReservation();
         int nbPlaces = params.getNbPlaces();
 
-        // 2) Conversion de la date de réservation en LocalDateTime
+        if (identifiantClient == null || identifiantClient.isBlank()) {
+            throw new IllegalArgumentException("Identifiant client requis");
+        }
+        if (dateReservationStr == null || dateReservationStr.isBlank()) {
+            throw new IllegalArgumentException("Date de réservation requise");
+        }
+        if (typeReservation == null || typeReservation.isBlank()) {
+            throw new IllegalArgumentException("Type de réservation requis");
+        }
+        if (nbPlaces <= 0) {
+            throw new IllegalArgumentException("Le nombre de places doit être positif");
+        }
+
         LocalDateTime dateReservation = toDate(dateReservationStr);
 
-        // 3) Extraction de la base de données des informations client
         Client client = clientDao.extraireClient(identifiantClient);
+        if (client == null) {
+            throw new IllegalArgumentException("Client introuvable : " + identifiantClient);
+        }
 
-        // 4) Extraction de la base de données des infos concernant le type de la réservation
         TypeReservation type = typeReservationDao.extraireTypeReservation(typeReservation);
+        if (type == null) {
+            throw new IllegalArgumentException("Type de réservation introuvable : " + typeReservation);
+        }
 
-        // 5) Création de la réservation
         Reservation reservation = new Reservation(dateReservation);
         reservation.setNbPlaces(nbPlaces);
         reservation.setClient(client);
 
-        // 6) Ajout de la réservation au client
         client.getReservations().add(reservation);
 
-        // 7) Calcul du montant total de la réservation qui dépend:
-        //    - du nombre de places
-        //    - de la réduction qui s'applique si le client est premium ou non
-        double total = type.getMontant() * nbPlaces;
-        if (client.isPremium()) {
-            reservation.setTotal(total * (1 - type.getReductionPourcent() / 100.0));
-        } else {
-            reservation.setTotal(total);
-        }
+        reservation.setTotal(calculateTotal(type, nbPlaces, client.isPremium()));
         return reservation;
+    }
+
+    private double calculateTotal(TypeReservation type, int nbPlaces, boolean premium) {
+        double total = type.getMontant() * nbPlaces;
+        return premium ? total * (1 - type.getReductionPourcent() / 100.0) : total;
     }
 
     /**
@@ -79,7 +91,10 @@ public class ReservationController {
      * @return LocalDateTime
      */
     private LocalDateTime toDate(String dateStr) {
-
-        return LocalDateTime.parse(dateStr, formatter);
+        try {
+            return LocalDateTime.parse(dateStr, formatter);
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException("Format de date invalide : " + dateStr, ex);
+        }
     }
 }

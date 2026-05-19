@@ -70,4 +70,28 @@ public class ReservationControllerTest extends TestCase {
 
         assertEquals(43.6, reservation.getTotal(), DELTA);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreerReservationClientInexistant() {
+        Params params = new Params();
+        params.setDateReservation("20/11/2020 19:55:00");
+        params.setNbPlaces(1);
+        params.setIdentifiantClient("999");
+        params.setTypeReservation("TH");
+
+        ReservationController controller = new ReservationController();
+        controller.creerReservation(params);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreerReservationTypeInconnu() {
+        Params params = new Params();
+        params.setDateReservation("20/11/2020 19:55:00");
+        params.setNbPlaces(1);
+        params.setIdentifiantClient("1");
+        params.setTypeReservation("XX");
+
+        ReservationController controller = new ReservationController();
+        controller.creerReservation(params);
+    }
 }
