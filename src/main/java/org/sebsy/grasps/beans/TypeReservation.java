@@ -1,37 +1,55 @@
 package org.sebsy.grasps.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  */
 @Entity
+@Table(name = "TYPE_RESERVATION")
 public class TypeReservation {
 
     /**
      * id
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     /**
      * type de spectacle
      */
+    @Column(name = "TYPE")
     private String type;
 
     /**
      * Montant de la réservation
      */
+    @Column(name = "MONTANT")
     private double montant;
 
     /**
      * reduction en % uniquement pour les clients premium
      */
+    @Column(name = "REDUCTION_POURCENT")
     private double reductionPourcent;
 
     public TypeReservation() {
         super();
+    }
+
+    public TypeReservation(Long id, String type, double montant, double reductionPourcent) {
+        super();
+        this.id = id;
+        this.type = type;
+        this.montant = montant;
+        this.reductionPourcent = reductionPourcent;
     }
 
     public TypeReservation(String type, double montant, double reductionPourcent) {

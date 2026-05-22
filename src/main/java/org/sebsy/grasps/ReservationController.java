@@ -4,6 +4,7 @@ import org.sebsy.grasps.beans.Client;
 import org.sebsy.grasps.beans.Reservation;
 import org.sebsy.grasps.beans.TypeReservation;
 import org.sebsy.grasps.daos.ClientDao;
+import org.sebsy.grasps.daos.ReservationDao;
 import org.sebsy.grasps.daos.TypeReservationDao;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,11 @@ public class ReservationController {
      * DAO permettant d'accéder à la table des types de réservation
      */
     private TypeReservationDao typeReservationDao = new TypeReservationDao();
+
+    /**
+     * DAO permettant d'accéder aux réservations
+     */
+    private ReservationDao reservationDao = new ReservationDao();
 
     /**
      * Méthode qui créée une réservation pour un client à partir des informations transmises
@@ -76,6 +82,8 @@ public class ReservationController {
         client.getReservations().add(reservation);
 
         reservation.setTotal(calculateTotal(type, nbPlaces, client.isPremium()));
+
+        reservationDao.save(reservation);
         return reservation;
     }
 

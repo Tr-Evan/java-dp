@@ -1,21 +1,31 @@
 package org.sebsy.grasps.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "RESERVATION")
 public class Reservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
+    @Column(name = "DATE")
     private LocalDateTime date;
 
+    @Column(name = "NB_PLACES")
     private int nbPlaces;
 
+    @Column(name = "TOTAL")
     private double total;
 
     @ManyToOne
@@ -29,6 +39,14 @@ public class Reservation {
     public Reservation(LocalDateTime date) {
         super();
         this.date = date;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**

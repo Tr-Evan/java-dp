@@ -1,17 +1,22 @@
 package org.sebsy.grasps.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "CLIENT")
 public class Client {
 
     @Id
+    @Column(name = "IDENTIFIANT_CLIENT")
     private String identifiantClient;
 
+    @Column(name = "PREMIUM")
     private boolean premium;
 
     @OneToMany(mappedBy = "client")

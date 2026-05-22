@@ -7,66 +7,31 @@ public class Tri {
             return;
         }
 
+        SortStrategy strategy = resolveStrategy(typeTri);
+        strategy.sort(arr);
+    }
+
+    public void exec(SortStrategy strategy, Integer[] arr) {
+        if (strategy == null) {
+            throw new IllegalArgumentException("Strategy must not be null");
+        }
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+
+        strategy.sort(arr);
+    }
+
+    private SortStrategy resolveStrategy(int typeTri) {
         switch (typeTri) {
             case 1:
-                bubbleSort(arr);
-                break;
+                return new BubbleSortStrategy();
             case 2:
-                insertionSort(arr);
-                break;
+                return new InsertionSortStrategy();
             case 3:
-                selectionSort(arr);
-                break;
+                return new SelectionSortStrategy();
             default:
                 throw new IllegalArgumentException("Type de tri inconnu : " + typeTri);
         }
-    }
-
-    private void bubbleSort(Integer[] arr) {
-        int n = arr.length;
-        for (int i = 0; i < n - 1; i++) {
-            boolean swapped = false;
-            for (int j = 0; j < n - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    swap(arr, j, j + 1);
-                    swapped = true;
-                }
-            }
-            // If no elements were swapped, array is already sorted
-            if (!swapped) {
-                break;
-            }
-        }
-    }
-
-    private void insertionSort(Integer[] arr) {
-        for (int k = 1; k < arr.length; k++) {
-            int temp = arr[k];
-            int j = k - 1;
-            // Use '>' to maintain stable ordering for equal elements
-            while (j >= 0 && arr[j] > temp) {
-                arr[j + 1] = arr[j];
-                j--;
-            }
-            arr[j + 1] = temp;
-        }
-    }
-
-    private void selectionSort(Integer[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            int index = i;
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[index]) {
-                    index = j;
-                }
-            }
-            swap(arr, i, index);
-        }
-    }
-
-    private void swap(Integer[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 }
