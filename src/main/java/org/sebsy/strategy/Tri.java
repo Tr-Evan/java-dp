@@ -25,10 +25,16 @@ public class Tri {
     private void bubbleSort(Integer[] arr) {
         int n = arr.length;
         for (int i = 0; i < n - 1; i++) {
+            boolean swapped = false;
             for (int j = 0; j < n - i - 1; j++) {
                 if (arr[j] > arr[j + 1]) {
                     swap(arr, j, j + 1);
+                    swapped = true;
                 }
+            }
+            // If no elements were swapped, array is already sorted
+            if (!swapped) {
+                break;
             }
         }
     }
@@ -37,7 +43,8 @@ public class Tri {
         for (int k = 1; k < arr.length; k++) {
             int temp = arr[k];
             int j = k - 1;
-            while (j >= 0 && temp <= arr[j]) {
+            // Use '>' to maintain stable ordering for equal elements
+            while (j >= 0 && arr[j] > temp) {
                 arr[j + 1] = arr[j];
                 j--;
             }

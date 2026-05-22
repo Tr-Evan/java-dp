@@ -1,10 +1,10 @@
 package org.sebsy.grasps;
 
-import junit.framework.TestCase;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 import org.sebsy.grasps.beans.Reservation;
 
-public class ReservationControllerTest extends TestCase {
+public class ReservationControllerTest {
 
     /**
      * DELTA
